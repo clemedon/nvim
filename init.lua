@@ -22,59 +22,59 @@
 
 What is Kickstart?
 
-  Kickstart.nvim is *not* a distribution.
+Kickstart.nvim is *not* a distribution.
 
-  Kickstart.nvim is a starting point for your own configuration.
-    The goal is that you can read every line of code, top-to-bottom, understand
-    what your configuration is doing, and modify it to suit your needs.
+Kickstart.nvim is a starting point for your own configuration.
+The goal is that you can read every line of code, top-to-bottom, understand
+what your configuration is doing, and modify it to suit your needs.
 
-    Once you've done that, you can start exploring, configuring and tinkering to
-    make Neovim your own! That might mean leaving Kickstart just the way it is for a while
-    or immediately breaking it into modular pieces. It's up to you!
+Once you've done that, you can start exploring, configuring and tinkering to
+make Neovim your own! That might mean leaving Kickstart just the way it is for a while
+or immediately breaking it into modular pieces. It's up to you!
 
-    If you don't know anything about Lua, I recommend taking some time to read through
-    a guide. One possible example which will only take 10-15 minutes:
-      - https://learnxinyminutes.com/docs/lua/
+If you don't know anything about Lua, I recommend taking some time to read through
+a guide. One possible example which will only take 10-15 minutes:
+- https://learnxinyminutes.com/docs/lua/
 
-    After understanding a bit more about Lua, you can use `:help lua-guide` as a
-    reference for how Neovim integrates Lua.
-    - :help lua-guide
-    - (or HTML version): https://neovim.io/doc/user/lua-guide.html
+After understanding a bit more about Lua, you can use `:help lua-guide` as a
+reference for how Neovim integrates Lua.
+- :help lua-guide
+- (or HTML version): https://neovim.io/doc/user/lua-guide.html
 
 Kickstart Guide:
 
-  TODO: The very first thing you should do is to run the command `:Tutor` in Neovim.
+TODO: The very first thing you should do is to run the command `:Tutor` in Neovim.
 
-    If you don't know what this means, type the following:
-      - <escape key>
-      - :
-      - Tutor
-      - <enter key>
+If you don't know what this means, type the following:
+- <escape key>
+- :
+- Tutor
+- <enter key>
 
-    (If you already know the Neovim basics, you can skip this step.)
+(If you already know the Neovim basics, you can skip this step.)
 
-  Once you've completed that, you can continue working through **AND READING** the rest
-  of the kickstart init.lua.
+Once you've completed that, you can continue working through **AND READING** the rest
+of the kickstart init.lua.
 
-  Next, run AND READ `:help`.
-    This will open up a help window with some basic information
-    about reading, navigating and searching the builtin help documentation.
+Next, run AND READ `:help`.
+This will open up a help window with some basic information
+about reading, navigating and searching the builtin help documentation.
 
-    This should be the first place you go to look when you're stuck or confused
-    with something. It's one of my favorite Neovim features.
+This should be the first place you go to look when you're stuck or confused
+with something. It's one of my favorite Neovim features.
 
-    MOST IMPORTANTLY, we provide a keymap "<space>sh" to [s]earch the [h]elp documentation,
-    which is very useful when you're not exactly sure of what you're looking for.
+MOST IMPORTANTLY, we provide a keymap "<space>sh" to [s]earch the [h]elp documentation,
+which is very useful when you're not exactly sure of what you're looking for.
 
-  I have left several `:help X` comments throughout the init.lua
-    These are hints about where to find more information about the relevant settings,
-    plugins or Neovim features used in Kickstart.
+I have left several `:help X` comments throughout the init.lua
+These are hints about where to find more information about the relevant settings,
+plugins or Neovim features used in Kickstart.
 
-   NOTE: Look for lines like this
+NOTE: Look for lines like this
 
-    Throughout the file. These are for you, the reader, to help you understand what is happening.
-    Feel free to delete them once you know what you're doing, but they should serve as a guide
-    for when you are first encountering a few different constructs in your Neovim config.
+Throughout the file. These are for you, the reader, to help you understand what is happening.
+Feel free to delete them once you know what you're doing, but they should serve as a guide
+for when you are first encountering a few different constructs in your Neovim config.
 
 If you experience any errors while trying to install kickstart, run `:checkhealth` for more info.
 
@@ -91,7 +91,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 require 'options'
@@ -105,5 +105,30 @@ require 'lazy-bootstrap'
 -- [[ Configure and install plugins ]]
 require 'lazy-plugins'
 
--- The line beneath this is called `modeline`. See `:help modeline`
+-- Detect the user and set the NOESIS path accordingly
+local home = os.getenv 'HOME'
+local user = os.getenv 'USER'
+
+if user == 'clem' or user == 'perso' then
+    vim.env.NOESIS = home .. '/git/noesis'
+else
+    vim.env.NOESIS = home .. '/Perso/noesis'
+end
+
+-- Set the GPGID and NVIMRC environment variables
+vim.env.GPGID = 'A3CE5F737DA5EDACFCF5C0B6E52CFE6FE75F6035'
+local dotnvim = home .. '/.config/nvim'
+vim.env.NVIMRC = dotnvim
+
+-- Create directories if they do not exist
+local function create_dir_if_missing(path)
+    if vim.fn.empty(vim.fn.glob(path)) == 1 then
+        vim.fn.mkdir(path, 'p')
+    end
+end
+
+create_dir_if_missing(dotnvim .. '/.undo')
+create_dir_if_missing(dotnvim .. '/.spell')
+create_dir_if_missing(dotnvim .. '/.swap')
+
 -- vim: ts=2 sts=2 sw=2 et
