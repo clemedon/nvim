@@ -8,6 +8,10 @@
 return {
   { -- Fuzzy Finder (files, lsp, etc)
     'nvim-telescope/telescope.nvim',
+    -- keys = {
+    --   { '<leader>w', false },
+    --   { '<leader>ws', false },
+    -- },
     event = 'VimEnter',
     branch = '0.1.x',
     dependencies = {
